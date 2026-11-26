@@ -28,7 +28,7 @@ assert LINE.strip(), "line must not be only whitespace"
 
 
 def main():
-    out_dir = os.environ.get("MAKEFUN_OUTPUT_DIR", "/output")
+    out_dir = os.environ.get("MAKEFUN_OUTPUT_DIR") or "/output"
     os.makedirs(out_dir, exist_ok=True)
     path = os.path.join(out_dir, "entry.txt")
     with open(path, "w", encoding="utf-8") as handle:
@@ -37,6 +37,8 @@ def main():
         saved = handle.read()
     if saved != LINE + "\n":
         raise SystemExit("entry.txt does not hold the roast line")
+    if os.path.getsize(path) != len((LINE + "\n").encode("utf-8")):
+        raise SystemExit("entry.txt has the wrong byte length")
     print(LINE)
 
 
